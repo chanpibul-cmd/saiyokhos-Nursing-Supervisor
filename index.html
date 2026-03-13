@@ -71,7 +71,7 @@
               <tr><td class="fw-bold">LR</td><td><input type="number" class="form-control rn-input" id="lr_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="lr_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="lr_leave" oninput="calcSum()"></td><td><div class="d-flex flex-column flex-md-row gap-2"><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-success text-white">คลอด</span><input type="number" class="form-control" id="lr_delivered"></div><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-warning">รอคลอด</span><input type="number" class="form-control" id="lr_waiting"></div></div></td></tr>
               <tr><td class="fw-bold">Ward</td><td><input type="number" class="form-control rn-input" id="ward_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="ward_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="ward_leave" oninput="calcSum()"></td><td><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-info text-dark">ยอดผู้ป่วย</span><input type="number" class="form-control" id="ward_pt"></div></td></tr>
               <tr><td class="fw-bold">VIP</td><td><input type="number" class="form-control rn-input" id="vip_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="vip_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="vip_leave" oninput="calcSum()"></td><td><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-info text-dark">ยอดผู้ป่วย</span><input type="number" class="form-control" id="vip_pt"></div></td></tr>
-              <tr><td class="fw-bold">CRM</td><td><input type="number" class="form-control rn-input" id="screen_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="screen_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="screen_leave" oninput="calcSum()"></td><td></td></tr>
+              <tr><td class="fw-bold">NurseCRM</td><td><input type="number" class="form-control rn-input" id="screen_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="screen_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="screen_leave" oninput="calcSum()"></td><td></td></tr>
               <tr><td class="fw-bold">ห้องบัตร</td><td><input type="number" class="form-control rn-input" id="card_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="card_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="card_leave" oninput="calcSum()"></td><td></td></tr>
             </tbody>
             <tfoot>
@@ -413,7 +413,7 @@
               <tr><td class="text-start">LR</td><td>${row[9]||0}</td><td>${row[10]||0}</td><td>${row[11]||0}</td><td>คลอด ${row[12]||0}, รอ ${row[13]||0}</td></tr>
               <tr><td class="text-start">Ward</td><td>${row[14]||0}</td><td>${row[15]||0}</td><td>${row[16]||0}</td><td>ผู้ป่วย: ${row[17]||'-'}</td></tr>
               <tr><td class="text-start">VIP</td><td>${row[18]||0}</td><td>${row[19]||0}</td><td>${row[20]||0}</td><td>ผู้ป่วย: ${row[21]||'-'}</td></tr>
-              <tr><td class="text-start">CRM</td><td>${row[22]||0}</td><td>${row[23]||0}</td><td>${row[24]||0}</td><td>-</td></tr>
+              <tr><td class="text-start">NurseCRM</td><td>${row[22]||0}</td><td>${row[23]||0}</td><td>${row[24]||0}</td><td>-</td></tr>
               <tr><td class="text-start">ห้องบัตร</td><td>${row[25]||0}</td><td>${row[26]||0}</td><td>${row[27]||0}</td><td>-</td></tr>
               <tr class="table-secondary fw-bold"><td class="text-end">รวม</td><td>${row[28]||0}</td><td>${row[29]||0}</td><td>${row[30]||0}</td><td></td></tr>
             </tbody>
@@ -535,4 +535,5 @@
 </body>
 
 </html>
+
 
