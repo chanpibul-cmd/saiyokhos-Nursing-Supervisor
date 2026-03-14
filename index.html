@@ -20,13 +20,31 @@
     .section-view { display: none; }
     .section-view.active { display: block; }
     .detail-box { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef; }
-      </style>
+     body { 
+      background-color: #f4f7f6; 
+      font-family: 'Sarabun', sans-serif; 
+      
+      /* 🟢 ป้องกันการลากคลุมดำ */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    
+    /* 🟢 ยกเว้นให้ช่องกรอกข้อมูลยังพิมพ์และคลุมดำเพื่อลบได้ */
+    input, textarea, select {
+      -webkit-user-select: auto;
+      -moz-user-select: auto;
+      -ms-user-select: auto;
+      user-select: auto;
+    } 
+     </style>
 </head>
 <body>
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
     <div class="container-fluid">
-      <a class="navbar-brand fw-bold" href="#">🏥 ระบบตรวจการพยาบาล</a>
+      <a class="navbar-brand fw-bold" href="#">🏥 ระบบตรวจการพยาบาลโรงพยาบาลไทรโยค</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -203,7 +221,11 @@
       </div>
     </div>
   </div>
-
+<div class="text-center text-muted mt-5 mb-4" style="font-size: 0.9rem;">
+    &copy; 2026 ระบบตรวจการพยาบาลโรงพยาบาลไทรโยค<br>
+    ออกแบบและพัฒนาโดย <b>@narongkanchanpibul2026</b><br>
+    สงวนลิขสิทธิ์ ห้ามคัดลอกหรือดัดแปลงโดยไม่ได้รับอนุญาต
+  </div>
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -530,6 +552,38 @@
         iframe.contentWindow.print();
       }, 500);
     }
+    // ================= 🟢 ระบบป้องกันการคัดลอก (Anti-Copy) =================
+  
+  // 1. ป้องกันการคลิกขวา
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+  });
+
+  // 2. ป้องกันการคลิกเพื่อ Copy
+  document.addEventListener('copy', function(e) {
+    e.preventDefault();
+    Swal.fire({ icon: 'warning', title: 'สงวนลิขสิทธิ์', text: 'ไม่อนุญาตให้คัดลอกข้อมูล @narongkanchanpibul2026', timer: 1500, showConfirmButton: false });
+  });
+
+  // 3. ป้องกันการกดปุ่มลัดต่างๆ (Ctrl+C, Ctrl+U, F12)
+  document.addEventListener('keydown', function(e) {
+    // ป้องกัน F12 (เครื่องมือนักพัฒนา)
+    if (e.key === 'F12') {
+      e.preventDefault();
+    }
+    // ป้องกัน Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+U (ดู Source Code)
+    if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+      e.preventDefault();
+    }
+    if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+      e.preventDefault();
+    }
+    // ป้องกัน Ctrl+C (คัดลอก)
+    if (e.ctrlKey && (e.key === 'c' || e.key === 'C')) {
+      e.preventDefault();
+      Swal.fire({ icon: 'warning', title: 'สงวนลิขสิทธิ์', text: 'ไม่อนุญาตให้คัดลอกข้อมูล @narongkanchanpibul2026', timer: 1500, showConfirmButton: false });
+    }
+  });
   </script>
  
 </body>
