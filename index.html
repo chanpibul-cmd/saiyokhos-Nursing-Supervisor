@@ -22,6 +22,13 @@
     .section-view.active { display: block; }
     .detail-box { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef; }
     .badge-count { font-size: 0.75rem; vertical-align: text-top; }
+    
+    /* การ์ด Dashboard */
+    .stat-card { border-radius: 10px; padding: 20px; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .bg-gradient-daily { background: linear-gradient(135deg, #3498db, #2980b9); }
+    .bg-gradient-monthly { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+    .bg-gradient-yearly { background: linear-gradient(135deg, #1abc9c, #16a085); }
+    
     body { 
       background-color: #f4f7f6; 
       font-family: 'Sarabun', sans-serif; 
@@ -46,6 +53,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link active" id="nav-form" onclick="switchTab('form')">📝 บันทึกเวร</a></li>
+          <li class="nav-item"><a class="nav-link" id="nav-dashboard" onclick="switchTab('dashboard')">📈 แดชบอร์ด</a></li>
           <li class="nav-item"><a class="nav-link" id="nav-report" onclick="switchTab('report')">📊 รายงานทั้งหมด</a></li>
           <li class="nav-item">
             <a class="nav-link text-warning" id="nav-ack" onclick="checkPasswordAndSwitch()">
@@ -158,6 +166,41 @@
       </form>
     </div>
 
+    <div id="section-dashboard" class="section-view">
+      <h3 class="mb-4 text-primary fw-bold">📈 แดชบอร์ดสรุปข้อมูล</h3>
+      
+      <div class="row g-3 mb-4">
+        <div class="col-12 col-md-4">
+          <div class="stat-card bg-gradient-daily">
+            <h5 class="fw-bold border-bottom pb-2">📅 ข้อมูลรายวัน (วันนี้)</h5>
+            <div class="d-flex justify-content-between mt-3"><span>ส่งเวรทั้งหมด:</span> <span id="db-daily-total" class="fw-bold fs-5">0</span></div>
+            <div class="d-flex justify-content-between"><span>สถานการณ์ปกติ:</span> <span id="db-daily-normal" class="fw-bold text-light">0</span></div>
+            <div class="d-flex justify-content-between"><span>มีประเด็นติดตาม:</span> <span id="db-daily-issue" class="fw-bold text-warning">0</span></div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="stat-card bg-gradient-monthly">
+            <h5 class="fw-bold border-bottom pb-2">📊 ข้อมูลรายเดือน</h5>
+            <div class="d-flex justify-content-between mt-3"><span>ส่งเวรทั้งหมด:</span> <span id="db-monthly-total" class="fw-bold fs-5">0</span></div>
+            <div class="d-flex justify-content-between"><span>สถานการณ์ปกติ:</span> <span id="db-monthly-normal" class="fw-bold text-light">0</span></div>
+            <div class="d-flex justify-content-between"><span>มีประเด็นติดตาม:</span> <span id="db-monthly-issue" class="fw-bold text-warning">0</span></div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="stat-card bg-gradient-yearly">
+            <h5 class="fw-bold border-bottom pb-2">📆 ข้อมูลรายปี</h5>
+            <div class="d-flex justify-content-between mt-3"><span>ส่งเวรทั้งหมด:</span> <span id="db-yearly-total" class="fw-bold fs-5">0</span></div>
+            <div class="d-flex justify-content-between"><span>สถานการณ์ปกติ:</span> <span id="db-yearly-normal" class="fw-bold text-light">0</span></div>
+            <div class="d-flex justify-content-between"><span>มีประเด็นติดตาม:</span> <span id="db-yearly-issue" class="fw-bold text-warning">0</span></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="alert alert-info">
+        <i class="fw-bold">📌 สรุปยอดรอหัวหน้าลงนามรับทราบ:</i> <span id="db-pending-total" class="fw-bold fs-5 text-danger">0</span> รายการ
+      </div>
+    </div>
+
     <div id="section-report" class="section-view">
       <h3 class="mb-4 text-primary fw-bold">📊 ประวัติรายงานเวรทั้งหมด</h3>
       <div class="table-responsive">
@@ -175,7 +218,7 @@
       <div class="table-responsive">
         <table class="table table-striped table-bordered w-100 text-nowrap" id="ackTable">
           <thead class="table-dark">
-            <tr><th>วันที่</th><th>เวร</th><th>ผู้รายงาน</th><th>สถานะเวร</th><th>สถานะลงนาม</th><th>ดำเนินการแก้ไข</th><th>แก้ไขเสร็จสิ้น</th><th>แอคชั่น</th></tr>
+            <tr><th>วันที่</th><th>เวร</th><th>ผู้รายงาน</th><th>สถานะเวร</th><th>สถานะลงนาม</th><th>สถานะการแก้ไข</th><th>รายละเอียดการแก้ไข</th><th>แอคชั่น</th></tr>
           </thead>
           <tbody id="ackTbody"></tbody>
         </table>
@@ -199,12 +242,17 @@
             <input type="hidden" id="ack_row_num">
             
             <div class="mb-3">
-              <label class="fw-bold text-primary">การดำเนินการแก้ไข</label>
-              <textarea class="form-control" id="modal_action_taken" rows="2" placeholder="ระบุการดำเนินการ..."></textarea>
+              <label class="fw-bold text-primary">สถานะการแก้ไข</label>
+              <select class="form-select" id="modal_action_status">
+                <option value="">-- เลือกสถานะ --</option>
+                <option value="ไม่มีประเด็นแก้ไข">ไม่มีประเด็นแก้ไข</option>
+                <option value="กำลังแก้ไข">กำลังแก้ไข</option>
+                <option value="แก้ไขเสร็จสิ้น">แก้ไขเสร็จสิ้น</option>
+              </select>
             </div>
             <div class="mb-3">
-              <label class="fw-bold text-success">แก้ไขเสร็จสิ้น (รายละเอียด)</label>
-              <textarea class="form-control" id="modal_resolution" rows="2" placeholder="ระบุรายละเอียดเมื่อแก้ไขเสร็จสิ้น..."></textarea>
+              <label class="fw-bold text-success">รายละเอียดการแก้ไข</label>
+              <textarea class="form-control" id="modal_resolution" rows="2" placeholder="ระบุรายละเอียด..."></textarea>
             </div>
 
             <div class="row g-3">
@@ -246,7 +294,10 @@
 
   <script>
     // ⚠️ นำ Web App URL ที่ได้จาก Google Apps Script มาวางที่นี่
-    const API_URL = "https://script.google.com/macros/s/AKfycbyHRuhrafkOYS8TmyK3Jw5Nqyaai4FVGrfzdQu0r00KW7fbC_hHVCGS2ofScJ181vX8zw/exec"; 
+    const API_URL = "https://script.google.com/macros/s/AKfycbxqZ-YZ67WVDROn7kIVRBIAorwvcBZt-nN7eLwNEwKTLI27VkS1piOYqZXg4c9COqY5-Q/exec"; 
+
+    // ตัวแปรเก็บสถานะว่าเข้าสู่ระบบหัวหน้าแล้วหรือยัง (ไม่ต้องใส่รหัสซ้ำ)
+    let isHeadAuthenticated = false;
 
     async function callBackend(action, payload = null) {
       try {
@@ -256,11 +307,8 @@
           body: JSON.stringify({ action: action, payload: payload })
         });
         const res = await response.json();
-        if (res.status === 'success') {
-          return res.data;
-        } else {
-          throw new Error(res.message);
-        }
+        if (res.status === 'success') { return res.data; } 
+        else { throw new Error(res.message); }
       } catch (error) {
         console.error("API Error:", error);
         throw error;
@@ -277,7 +325,7 @@
       document.getElementById('modal_head_date').value = today;
 
       callBackend('getDropdownData').then(populateDropdowns).catch(err => console.error("Dropdow Error:", err));
-      loadReportsData(); // ดึงข้อมูลไว้ก่อนเพื่ออัปเดตตัวเลขแจ้งเตือน
+      loadReportsData(); 
     };
 
     function switchTab(tabId) {
@@ -288,12 +336,17 @@
       document.getElementById('nav-' + tabId).classList.add('active');
       $('.navbar-collapse').collapse('hide');
 
-      if(tabId === 'report' || tabId === 'ack') {
+      if(tabId === 'report' || tabId === 'ack' || tabId === 'dashboard') {
         loadReportsData();
       }
     }
 
     function checkPasswordAndSwitch() {
+      if (isHeadAuthenticated) {
+        switchTab('ack');
+        return;
+      }
+
       Swal.fire({
         title: '🔒 การเข้าถึงแบบจำกัด',
         text: 'กรุณากรอกรหัสผ่านเพื่อเข้าสู่หน้าหัวหน้ารับทราบ',
@@ -304,6 +357,7 @@
         cancelButtonText: 'ยกเลิก',
       }).then((result) => {
         if (result.value === '11278') {
+          isHeadAuthenticated = true; // จำรหัสผ่านไว้
           switchTab('ack');
         } else if (result.value) {
           Swal.fire('รหัสผ่านไม่ถูกต้อง', 'คุณไม่มีสิทธิ์เข้าถึงหน้านี้', 'error');
@@ -314,9 +368,7 @@
     function populateDropdowns(data) {
       nameDeptMap = data.nameData;
       let options = '<option value="">พิมพ์ค้นหารายชื่อ...</option>';
-      for (let name in nameDeptMap) {
-        options += `<option value="${name}">${name}</option>`;
-      }
+      for (let name in nameDeptMap) { options += `<option value="${name}">${name}</option>`; }
       $('#sign_rn').html(options);
       $('#modal_sign_head').html(options);
       $('#sign_rn').select2();
@@ -387,13 +439,46 @@
       callBackend('getReportsData').then(renderTables).catch(err => console.error("Load Error:", err));
     }
 
+    function renderDashboard(data) {
+      let now = new Date();
+      let dTotal = 0, dNormal = 0, dIssue = 0;
+      let mTotal = 0, mNormal = 0, mIssue = 0;
+      let yTotal = 0, yNormal = 0, yIssue = 0;
+
+      data.forEach(r => {
+        if(!r.date) return;
+        let rDate = new Date(r.date);
+        let isToday = (rDate.getDate() === now.getDate() && rDate.getMonth() === now.getMonth() && rDate.getFullYear() === now.getFullYear());
+        let isThisMonth = (rDate.getMonth() === now.getMonth() && rDate.getFullYear() === now.getFullYear());
+        let isThisYear = (rDate.getFullYear() === now.getFullYear());
+        let hasIssue = r.summary === 'มีประเด็นติดตามต่อ';
+
+        if(isThisYear) { yTotal++; hasIssue ? yIssue++ : yNormal++; }
+        if(isThisMonth) { mTotal++; hasIssue ? mIssue++ : mNormal++; }
+        if(isToday) { dTotal++; hasIssue ? dIssue++ : dNormal++; }
+      });
+
+      document.getElementById('db-daily-total').innerText = dTotal;
+      document.getElementById('db-daily-normal').innerText = dNormal;
+      document.getElementById('db-daily-issue').innerText = dIssue;
+
+      document.getElementById('db-monthly-total').innerText = mTotal;
+      document.getElementById('db-monthly-normal').innerText = mNormal;
+      document.getElementById('db-monthly-issue').innerText = mIssue;
+
+      document.getElementById('db-yearly-total').innerText = yTotal;
+      document.getElementById('db-yearly-normal').innerText = yNormal;
+      document.getElementById('db-yearly-issue').innerText = yIssue;
+    }
+
     function renderTables(data) {
       globalReports = data;
+      renderDashboard(data); // เรียกสร้าง Dashboard
+
       let reportHtml = '';
       let ackHtml = '';
       let pendingCount = 0;
 
-      // จัดเรียงหน้าหัวหน้า (รอลงนาม -> มีประเด็น -> ปกติ)
       let ackData = [...data].sort((a, b) => {
         let aPending = !a.sign_head ? 1 : 0;
         let bPending = !b.sign_head ? 1 : 0;
@@ -406,7 +491,6 @@
         return 0; 
       });
 
-      // ลูปสร้างตารางหน้า รายงานทั้งหมด
       data.forEach((r, index) => {
         let statusBadge = r.summary === 'ปกติ' ? `<span class="badge bg-success">ปกติ</span>` : `<span class="badge bg-danger">มีประเด็น</span>`;
         let headSign = r.sign_head ? `<span class="text-success fw-bold">✔️ ${r.sign_head}</span>` : `<span class="text-warning">รอดำเนินการ</span>`;
@@ -421,16 +505,17 @@
         if (!r.sign_head) pendingCount++;
       });
       document.getElementById('pendingCountBadge').innerText = pendingCount;
+      document.getElementById('db-pending-total').innerText = pendingCount; // อัปเดตใน Dashboard ด้วย
 
-      // ลูปสร้างตารางหน้า หัวหน้ารับทราบ
       ackData.forEach((r) => {
         let originalIndex = globalReports.indexOf(r);
         let fDate = r.date ? new Date(r.date).toLocaleDateString('th-TH') : '';
         let statusBadge = r.summary === 'ปกติ' ? `<span class="badge bg-success">ปกติ</span>` : `<span class="badge bg-danger">มีประเด็น</span>`;
         let ackStatus = r.sign_head ? `<span class="text-success fw-bold">✔️ ลงนามแล้ว</span>` : `<span class="text-warning fw-bold">รอตรวจสอบ</span>`;
         
-        let shortAction = r.action_taken ? (r.action_taken.length > 20 ? r.action_taken.substring(0,20)+'...' : r.action_taken) : '-';
-        let shortRes = r.resolution ? (r.resolution.length > 20 ? r.resolution.substring(0,20)+'...' : r.resolution) : '-';
+        let actColor = r.action_status === 'กำลังแก้ไข' ? 'text-primary' : (r.action_status === 'แก้ไขเสร็จสิ้น' ? 'text-success' : '');
+        let shortAction = r.action_status ? `<span class="${actColor} fw-bold">${r.action_status}</span>` : '-';
+        let shortRes = r.resolution_detail ? (r.resolution_detail.length > 20 ? r.resolution_detail.substring(0,20)+'...' : r.resolution_detail) : '-';
 
         ackHtml += `<tr>
           <td>${fDate}</td><td>${r.shift}</td><td>${r.sign_rn}</td>
@@ -469,8 +554,8 @@
             <h6 class="text-success fw-bold mb-2">✔️ รับทราบแล้ว</h6>
             <div class="mb-1"><strong>ผู้รับทราบ:</strong> ${row[44]}</div>
             <div class="mb-1"><strong>วันที่รับทราบ:</strong> ${ackDate}</div>
-            ${row[46] ? `<div class="mb-1 text-primary"><strong>ดำเนินการแก้ไข:</strong> ${row[46]}</div>` : ''}
-            ${row[47] ? `<div class="text-success"><strong>แก้ไขเสร็จสิ้น:</strong> ${row[47]}</div>` : ''}
+            ${row[46] ? `<div class="mb-1"><strong>สถานะการแก้ไข:</strong> <span class="fw-bold text-primary">${row[46]}</span></div>` : ''}
+            ${row[47] ? `<div class="text-success"><strong>รายละเอียดการแก้ไข:</strong> ${row[47]}</div>` : ''}
           </div>
         `;
       }
@@ -529,8 +614,8 @@
         document.getElementById('ack_row_num').value = r.rowNum;
         
         // เติมข้อมูลเก่าถ้ามี
-        document.getElementById('modal_action_taken').value = r.action_taken || '';
-        document.getElementById('modal_resolution').value = r.resolution || '';
+        document.getElementById('modal_action_status').value = r.action_status || '';
+        document.getElementById('modal_resolution').value = r.resolution_detail || '';
 
         if (r.sign_head) {
             $('#modal_sign_head').val(r.sign_head).trigger('change');
@@ -558,12 +643,11 @@
       let rowNum = document.getElementById('ack_row_num').value;
       let headName = $('#modal_sign_head').val();
       let headDate = document.getElementById('modal_head_date').value;
-      let actionTaken = document.getElementById('modal_action_taken').value;
-      let resolution = document.getElementById('modal_resolution').value;
+      let actionStatus = document.getElementById('modal_action_status').value;
+      let resolutionDetail = document.getElementById('modal_resolution').value;
 
-      // อนุญาตให้บันทึกแค่ Action อย่างเดียวก่อนได้แม้ยังไม่ลงชื่อรับทราบสมบูรณ์
-      if(!headName && !actionTaken && !resolution) { 
-        Swal.fire('แจ้งเตือน', 'กรุณาระบุการดำเนินการ หรือ เลือกชื่อผู้รับทราบ', 'warning'); return; 
+      if(!headName && !actionStatus && !resolutionDetail) { 
+        Swal.fire('แจ้งเตือน', 'กรุณาระบุสถานะการแก้ไข หรือ เลือกชื่อผู้รับทราบ', 'warning'); return; 
       }
 
       Swal.fire({ title: 'กำลังบันทึก...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
@@ -572,8 +656,8 @@
         rowNum: rowNum, 
         headName: headName, 
         headDate: headDate,
-        actionTaken: actionTaken,
-        resolution: resolution
+        actionStatus: actionStatus,
+        resolutionDetail: resolutionDetail
       };
       
       callBackend('saveHeadSignature', payload).then(res => {
