@@ -199,6 +199,11 @@
       <div class="alert alert-info">
         <i class="fw-bold">📌 สรุปยอดรอหัวหน้าลงนามรับทราบ:</i> <span id="db-pending-total" class="fw-bold fs-5 text-danger">0</span> รายการ
       </div>
+
+      <h5 class="fw-bold mt-5 mb-3 text-secondary border-bottom pb-2">📋 รายละเอียดข้อ 2-5 และประเด็นติดตาม (คลิกเพื่อกางดูรายละเอียด)</h5>
+      <div class="accordion shadow-sm" id="dashboardAccordion">
+        </div>
+
     </div>
 
     <div id="section-report" class="section-view">
@@ -294,9 +299,9 @@
 
   <script>
     // ⚠️ นำ Web App URL ที่ได้จาก Google Apps Script มาวางที่นี่
-    const API_URL = "https://script.google.com/macros/s/AKfycbxqZ-YZ67WVDROn7kIVRBIAorwvcBZt-nN7eLwNEwKTLI27VkS1piOYqZXg4c9COqY5-Q/exec"; 
+    const API_URL = "https://script.google.com/macros/s/AKfycbwIOpiIweicghNHC0Vnf30FqK32d8ztuW05uq3Cht_nM7semNsxVf8dfDbZJo28i75D/exec"; 
 
-    // ตัวแปรเก็บสถานะว่าเข้าสู่ระบบหัวหน้าแล้วหรือยัง (ไม่ต้องใส่รหัสซ้ำ)
+    // ตัวแปรจำรหัสผ่าน
     let isHeadAuthenticated = false;
 
     async function callBackend(action, payload = null) {
@@ -357,7 +362,7 @@
         cancelButtonText: 'ยกเลิก',
       }).then((result) => {
         if (result.value === '11278') {
-          isHeadAuthenticated = true; // จำรหัสผ่านไว้
+          isHeadAuthenticated = true; 
           switchTab('ack');
         } else if (result.value) {
           Swal.fire('รหัสผ่านไม่ถูกต้อง', 'คุณไม่มีสิทธิ์เข้าถึงหน้านี้', 'error');
@@ -444,10 +449,13 @@
       let dTotal = 0, dNormal = 0, dIssue = 0;
       let mTotal = 0, mNormal = 0, mIssue = 0;
       let yTotal = 0, yNormal = 0, yIssue = 0;
+      let accHtml = ''; // สำหรับเก็บ HTML ของ Accordion
 
-      data.forEach(r => {
+      data.forEach((r, idx) => {
         if(!r.date) return;
         let rDate = new Date(r.date);
+        let fDate = rDate.toLocaleDateString('th-TH');
+        
         let isToday = (rDate.getDate() === now.getDate() && rDate.getMonth() === now.getMonth() && rDate.getFullYear() === now.getFullYear());
         let isThisMonth = (rDate.getMonth() === now.getMonth() && rDate.getFullYear() === now.getFullYear());
         let isThisYear = (rDate.getFullYear() === now.getFullYear());
@@ -456,33 +464,65 @@
         if(isThisYear) { yTotal++; hasIssue ? yIssue++ : yNormal++; }
         if(isThisMonth) { mTotal++; hasIssue ? mIssue++ : mNormal++; }
         if(isToday) { dTotal++; hasIssue ? dIssue++ : dNormal++; }
+
+        // ----------- สร้างข้อมูล Accordion (รายการซ่อน/แสดง) -----------
+        let row = r.fullData;
+        let shift = row[1] || '';
+        let reporter = row[41] || '';
+        
+        let isProblematic = (row[32] === 'มี' || row[34] === 'มี' || row[38] !== '' || row[39] === 'มีประเด็นติดตามต่อ');
+        let badgeIcon = isProblematic ? '<span class="badge bg-warning text-dark ms-2">มีประเด็น/เหตุการณ์</span>' : '<span class="badge bg-light text-secondary ms-2 border">ปกติ</span>';
+
+        accHtml += `
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingDb${idx}">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDb${idx}">
+                <strong>📅 ${fDate} | เวร: ${shift} | 👤 ผู้รายงาน: ${reporter}</strong> ${badgeIcon}
+              </button>
+            </h2>
+            <div id="collapseDb${idx}" class="accordion-collapse collapse" data-bs-parent="#dashboardAccordion">
+              <div class="accordion-body bg-light">
+                 <ul class="list-group list-group-flush border rounded">
+                   <li class="list-group-item"><strong>2. ผู้ป่วยสำคัญ:</strong> ${row[32]} ${row[32] === 'มี' ? `<br><span class="text-danger">${row[33] || '-'}</span>` : ''}</li>
+                   <li class="list-group-item"><strong>3. เหตุการณ์สำคัญ:</strong> ${row[34]} ${row[34] === 'มี' ? `<br><span class="text-danger">${row[35] || '-'}</span>` : ''}</li>
+                   <li class="list-group-item"><strong>4. การประสานงาน:</strong> ${row[36] || '-'}<br><span class="text-muted">${row[37] || '-'}</span></li>
+                   <li class="list-group-item"><strong>5. ปัญหา/ข้อเสนอแนะ:</strong><br><span class="${row[38] ? 'text-danger' : 'text-muted'}">${row[38] || '-'}</span></li>
+                   <li class="list-group-item"><strong>📌 ประเด็นติดตาม (สรุปเวร):</strong> ${row[39]} ${row[39] === 'มีประเด็นติดตามต่อ' ? `<br><span class="text-danger">${row[40] || '-'}</span>` : ''}</li>
+                 </ul>
+              </div>
+            </div>
+          </div>
+        `;
       });
 
+      // อัปเดตตัวเลข
       document.getElementById('db-daily-total').innerText = dTotal;
       document.getElementById('db-daily-normal').innerText = dNormal;
       document.getElementById('db-daily-issue').innerText = dIssue;
-
       document.getElementById('db-monthly-total').innerText = mTotal;
       document.getElementById('db-monthly-normal').innerText = mNormal;
       document.getElementById('db-monthly-issue').innerText = mIssue;
-
       document.getElementById('db-yearly-total').innerText = yTotal;
       document.getElementById('db-yearly-normal').innerText = yNormal;
       document.getElementById('db-yearly-issue').innerText = yIssue;
+      
+      // อัปเดต Accordion
+      document.getElementById('dashboardAccordion').innerHTML = accHtml;
     }
 
     function renderTables(data) {
       globalReports = data;
-      renderDashboard(data); // เรียกสร้าง Dashboard
+      renderDashboard(data); 
 
       let reportHtml = '';
       let ackHtml = '';
       let pendingCount = 0;
 
+      // จัดเรียงหน้าหัวหน้า: (1.รอลงนาม 2.มีประเด็น 3.ปกติ)
       let ackData = [...data].sort((a, b) => {
         let aPending = !a.sign_head ? 1 : 0;
         let bPending = !b.sign_head ? 1 : 0;
-        if (aPending !== bPending) return bPending - aPending; 
+        if (aPending !== bPending) return bPending - aPending; // รอลงนามขึ้นก่อน
         
         let aIssue = a.summary === 'มีประเด็นติดตามต่อ' ? 1 : 0;
         let bIssue = b.summary === 'มีประเด็นติดตามต่อ' ? 1 : 0;
@@ -505,12 +545,14 @@
         if (!r.sign_head) pendingCount++;
       });
       document.getElementById('pendingCountBadge').innerText = pendingCount;
-      document.getElementById('db-pending-total').innerText = pendingCount; // อัปเดตใน Dashboard ด้วย
+      document.getElementById('db-pending-total').innerText = pendingCount; 
 
       ackData.forEach((r) => {
         let originalIndex = globalReports.indexOf(r);
         let fDate = r.date ? new Date(r.date).toLocaleDateString('th-TH') : '';
         let statusBadge = r.summary === 'ปกติ' ? `<span class="badge bg-success">ปกติ</span>` : `<span class="badge bg-danger">มีประเด็น</span>`;
+        
+        // สถานะ รอตรวจสอบ จะเป็นจุดเด่น
         let ackStatus = r.sign_head ? `<span class="text-success fw-bold">✔️ ลงนามแล้ว</span>` : `<span class="text-warning fw-bold">รอตรวจสอบ</span>`;
         
         let actColor = r.action_status === 'กำลังแก้ไข' ? 'text-primary' : (r.action_status === 'แก้ไขเสร็จสิ้น' ? 'text-success' : '');
@@ -525,6 +567,7 @@
         </tr>`;
       });
 
+      // จัดการ DataTable เพื่อไม่ให้มันไปลบการจัดเรียง (Sorting) ของเราในหน้าหัวหน้า
       if($.fn.DataTable.isDataTable('#reportTable')) $('#reportTable').DataTable().destroy();
       document.getElementById('reportTbody').innerHTML = reportHtml;
       $('#reportTable').DataTable({ 
@@ -535,7 +578,9 @@
       if($.fn.DataTable.isDataTable('#ackTable')) $('#ackTable').DataTable().destroy();
       document.getElementById('ackTbody').innerHTML = ackHtml;
       $('#ackTable').DataTable({ 
-        "pageLength": 10, "scrollX": true, 
+        "pageLength": 10, 
+        "scrollX": true, 
+        "order": [], // **สำคัญมาก:** ปิดการจัดเรียงอัตโนมัติของ DataTable เพื่อให้ "รอตรวจสอบ" อยู่บนสุดตามที่เขียน Logic ไว้
         "language": { "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/th.json" }
       });
     }
@@ -613,7 +658,6 @@
         document.getElementById('printBtn').style.display = 'inline-block';
         document.getElementById('ack_row_num').value = r.rowNum;
         
-        // เติมข้อมูลเก่าถ้ามี
         document.getElementById('modal_action_status').value = r.action_status || '';
         document.getElementById('modal_resolution').value = r.resolution_detail || '';
 
