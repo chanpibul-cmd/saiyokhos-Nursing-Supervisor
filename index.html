@@ -23,7 +23,6 @@
     .detail-box { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef; }
     .badge-count { font-size: 0.75rem; vertical-align: text-top; }
     
-    /* การ์ด Dashboard */
     .stat-card { border-radius: 10px; padding: 20px; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
     .bg-gradient-daily { background: linear-gradient(135deg, #3498db, #2980b9); }
     .bg-gradient-monthly { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
@@ -92,15 +91,19 @@
             </thead>
             <tbody>
               <tr><td class="fw-bold">OPD</td><td><input type="number" class="form-control rn-input" id="opd_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="opd_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="opd_leave" oninput="calcSum()"></td><td><div class="input-group input-group-sm extra-input-group"><span class="input-group-text">แพทย์ลา</span><input type="number" class="form-control" id="doctor_leave"></div></td></tr>
-              <tr><td class="fw-bold">ER</td><td><input type="number" class="form-control rn-input" id="er_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="er_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="er_leave" oninput="calcSum()"></td><td></td></tr>
-              <tr><td class="fw-bold">LR</td><td><input type="number" class="form-control rn-input" id="lr_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="lr_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="lr_leave" oninput="calcSum()"></td><td><div class="d-flex flex-column flex-md-row gap-2"><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-success text-white">คลอด</span><input type="number" class="form-control" id="lr_delivered"></div><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-warning">รอคลอด</span><input type="number" class="form-control" id="lr_waiting"></div></div></td></tr>
-              <tr><td class="fw-bold">Ward</td><td><input type="number" class="form-control rn-input" id="ward_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="ward_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="ward_leave" oninput="calcSum()"></td><td><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-info text-dark">ยอดผู้ป่วย</span><input type="number" class="form-control" id="ward_pt"></div></td></tr>
-              <tr><td class="fw-bold">VIP</td><td><input type="number" class="form-control rn-input" id="vip_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="vip_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="vip_leave" oninput="calcSum()"></td><td><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-info text-dark">ยอดผู้ป่วย</span><input type="number" class="form-control" id="vip_pt"></div></td></tr>
+              
+              <tr><td class="fw-bold">ER</td><td><input type="number" class="form-control rn-input" id="er_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="er_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="er_leave" oninput="calcSum()"></td><td><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-secondary text-white">เวชกิจ</span><input type="number" class="form-control" id="er_paramedic"></div></td></tr>
+              
+              <tr><td class="fw-bold">LR</td><td><input type="number" class="form-control rn-input" id="lr_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="lr_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="lr_leave" oninput="calcSum()"></td><td><div class="d-flex flex-column gap-2"><div class="d-flex flex-row gap-2"><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-success text-white">คลอด</span><input type="number" class="form-control" id="lr_delivered"></div><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-warning">รอคลอด</span><input type="number" class="form-control" id="lr_waiting"></div></div><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-danger text-white">หลังคลอด</span><input type="number" class="form-control" id="lr_postpartum"></div></div></td></tr>
+              
+              <tr><td class="fw-bold">Ward</td><td><input type="number" class="form-control rn-input" id="ward_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="ward_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="ward_leave" oninput="calcSum()"></td><td><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-info text-dark">ยอดผู้ป่วย</span><input type="number" class="form-control" id="ward_pt" oninput="calcSum()"></div></td></tr>
+              <tr><td class="fw-bold">VIP</td><td><input type="number" class="form-control rn-input" id="vip_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="vip_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="vip_leave" oninput="calcSum()"></td><td><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-info text-dark">ยอดผู้ป่วย</span><input type="number" class="form-control" id="vip_pt" oninput="calcSum()"></div></td></tr>
+              
               <tr><td class="fw-bold">NurseCRM</td><td><input type="number" class="form-control rn-input" id="screen_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="screen_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="screen_leave" oninput="calcSum()"></td><td></td></tr>
               <tr><td class="fw-bold">ห้องบัตร</td><td><input type="number" class="form-control rn-input" id="card_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="card_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="card_leave" oninput="calcSum()"></td><td></td></tr>
             </tbody>
             <tfoot>
-              <tr class="table-secondary"><th class="text-end text-nowrap">รวมทั้งหมด :</th><td><input type="number" class="form-control fw-bold text-center" id="sum_rn" readonly></td><td><input type="number" class="form-control fw-bold text-center" id="sum_pn" readonly></td><td><input type="number" class="form-control fw-bold text-center" id="sum_leave" readonly></td><td></td></tr>
+              <tr class="table-secondary"><th class="text-end text-nowrap">รวมทั้งหมด :</th><td><input type="number" class="form-control fw-bold text-center" id="sum_rn" readonly></td><td><input type="number" class="form-control fw-bold text-center" id="sum_pn" readonly></td><td><input type="number" class="form-control fw-bold text-center" id="sum_leave" readonly></td><td><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-primary text-white">รวมผู้ป่วย IP</span><input type="number" class="form-control fw-bold text-center" id="sum_ip_pt" readonly placeholder="0"></div></td></tr>
             </tfoot>
           </table>
         </div>
@@ -301,7 +304,6 @@
     // ⚠️ นำ Web App URL ที่ได้จาก Google Apps Script มาวางที่นี่
     const API_URL = "https://script.google.com/macros/s/AKfycbxODTzal-M8OYa1A1bJTPRb9FbAWjRzQDs17oZfAGqTgPsIPgyQHLLJBs-OSD3jy_vyow/exec"; 
 
-    // ตัวแปรจำรหัสผ่าน
     let isHeadAuthenticated = false;
 
     async function callBackend(action, payload = null) {
@@ -390,9 +392,15 @@
       document.querySelectorAll('.rn-input').forEach(e => sumRn += Number(e.value) || 0);
       document.querySelectorAll('.pn-input').forEach(e => sumPn += Number(e.value) || 0);
       document.querySelectorAll('.leave-input').forEach(e => sumLeave += Number(e.value) || 0);
+      
       document.getElementById('sum_rn').value = sumRn;
       document.getElementById('sum_pn').value = sumPn;
       document.getElementById('sum_leave').value = sumLeave;
+      
+      // คำนวณยอดผู้ป่วย IP
+      let wardPt = Number(document.getElementById('ward_pt').value) || 0;
+      let vipPt = Number(document.getElementById('vip_pt').value) || 0;
+      document.getElementById('sum_ip_pt').value = wardPt + vipPt;
     }
 
     function submitForm(e) {
@@ -407,13 +415,13 @@
       let obj = {
         date: document.getElementById('date').value, shift: document.getElementById('shift').value,
         opd_rn: document.getElementById('opd_rn').value, opd_pn: document.getElementById('opd_pn').value, opd_leave: document.getElementById('opd_leave').value, doctor_leave: document.getElementById('doctor_leave').value,
-        er_rn: document.getElementById('er_rn').value, er_pn: document.getElementById('er_pn').value, er_leave: document.getElementById('er_leave').value,
-        lr_rn: document.getElementById('lr_rn').value, lr_pn: document.getElementById('lr_pn').value, lr_leave: document.getElementById('lr_leave').value, lr_delivered: document.getElementById('lr_delivered').value, lr_waiting: document.getElementById('lr_waiting').value,
+        er_rn: document.getElementById('er_rn').value, er_paramedic: document.getElementById('er_paramedic').value, er_pn: document.getElementById('er_pn').value, er_leave: document.getElementById('er_leave').value,
+        lr_rn: document.getElementById('lr_rn').value, lr_pn: document.getElementById('lr_pn').value, lr_leave: document.getElementById('lr_leave').value, lr_delivered: document.getElementById('lr_delivered').value, lr_waiting: document.getElementById('lr_waiting').value, lr_postpartum: document.getElementById('lr_postpartum').value,
         ward_rn: document.getElementById('ward_rn').value, ward_pn: document.getElementById('ward_pn').value, ward_leave: document.getElementById('ward_leave').value, ward_pt: document.getElementById('ward_pt').value,
         vip_rn: document.getElementById('vip_rn').value, vip_pn: document.getElementById('vip_pn').value, vip_leave: document.getElementById('vip_leave').value, vip_pt: document.getElementById('vip_pt').value,
         screen_rn: document.getElementById('screen_rn').value, screen_pn: document.getElementById('screen_pn').value, screen_leave: document.getElementById('screen_leave').value,
         card_rn: document.getElementById('card_rn').value, card_pn: document.getElementById('card_pn').value, card_leave: document.getElementById('card_leave').value,
-        sum_rn: document.getElementById('sum_rn').value, sum_pn: document.getElementById('sum_pn').value, sum_leave: document.getElementById('sum_leave').value,
+        sum_rn: document.getElementById('sum_rn').value, sum_pn: document.getElementById('sum_pn').value, sum_leave: document.getElementById('sum_leave').value, sum_ip_pt: document.getElementById('sum_ip_pt').value,
         need_staff: document.getElementById('need_staff').value,
         vip_patient: document.getElementById('vip_patient').value, vip_patient_detail: document.getElementById('vip_patient_detail').value,
         incident: document.getElementById('incident').value, incident_detail: document.getElementById('incident_detail').value,
@@ -449,7 +457,7 @@
       let dTotal = 0, dNormal = 0, dIssue = 0;
       let mTotal = 0, mNormal = 0, mIssue = 0;
       let yTotal = 0, yNormal = 0, yIssue = 0;
-      let accHtml = ''; // สำหรับเก็บ HTML ของ Accordion
+      let accHtml = ''; 
 
       data.forEach((r, idx) => {
         if(!r.date) return;
@@ -465,12 +473,11 @@
         if(isThisMonth) { mTotal++; hasIssue ? mIssue++ : mNormal++; }
         if(isToday) { dTotal++; hasIssue ? dIssue++ : dNormal++; }
 
-        // ----------- สร้างข้อมูล Accordion (รายการซ่อน/แสดง) -----------
         let row = r.fullData;
         let shift = row[1] || '';
-        let reporter = row[41] || '';
+        let reporter = row[44] || ''; // เปลี่ยนตาม Index ใหม่
         
-        let isProblematic = (row[32] === 'มี' || row[34] === 'มี' || row[38] !== '' || row[39] === 'มีประเด็นติดตามต่อ');
+        let isProblematic = (row[35] === 'มี' || row[37] === 'มี' || row[41] !== '' || row[42] === 'มีประเด็นติดตามต่อ');
         let badgeIcon = isProblematic ? '<span class="badge bg-warning text-dark ms-2">มีประเด็น/เหตุการณ์</span>' : '<span class="badge bg-light text-secondary ms-2 border">ปกติ</span>';
 
         accHtml += `
@@ -483,11 +490,11 @@
             <div id="collapseDb${idx}" class="accordion-collapse collapse" data-bs-parent="#dashboardAccordion">
               <div class="accordion-body bg-light">
                  <ul class="list-group list-group-flush border rounded">
-                   <li class="list-group-item"><strong>2. ผู้ป่วยสำคัญ:</strong> ${row[32]} ${row[32] === 'มี' ? `<br><span class="text-danger">${row[33] || '-'}</span>` : ''}</li>
-                   <li class="list-group-item"><strong>3. เหตุการณ์สำคัญ:</strong> ${row[34]} ${row[34] === 'มี' ? `<br><span class="text-danger">${row[35] || '-'}</span>` : ''}</li>
-                   <li class="list-group-item"><strong>4. การประสานงาน:</strong> ${row[36] || '-'}<br><span class="text-muted">${row[37] || '-'}</span></li>
-                   <li class="list-group-item"><strong>5. ปัญหา/ข้อเสนอแนะ:</strong><br><span class="${row[38] ? 'text-danger' : 'text-muted'}">${row[38] || '-'}</span></li>
-                   <li class="list-group-item"><strong>📌 ประเด็นติดตาม (สรุปเวร):</strong> ${row[39]} ${row[39] === 'มีประเด็นติดตามต่อ' ? `<br><span class="text-danger">${row[40] || '-'}</span>` : ''}</li>
+                   <li class="list-group-item"><strong>2. ผู้ป่วยสำคัญ:</strong> ${row[35]} ${row[35] === 'มี' ? `<br><span class="text-danger">${row[36] || '-'}</span>` : ''}</li>
+                   <li class="list-group-item"><strong>3. เหตุการณ์สำคัญ:</strong> ${row[37]} ${row[37] === 'มี' ? `<br><span class="text-danger">${row[38] || '-'}</span>` : ''}</li>
+                   <li class="list-group-item"><strong>4. การประสานงาน:</strong> ${row[39] || '-'}<br><span class="text-muted">${row[40] || '-'}</span></li>
+                   <li class="list-group-item"><strong>5. ปัญหา/ข้อเสนอแนะ:</strong><br><span class="${row[41] ? 'text-danger' : 'text-muted'}">${row[41] || '-'}</span></li>
+                   <li class="list-group-item"><strong>📌 ประเด็นติดตาม (สรุปเวร):</strong> ${row[42]} ${row[42] === 'มีประเด็นติดตามต่อ' ? `<br><span class="text-danger">${row[43] || '-'}</span>` : ''}</li>
                  </ul>
               </div>
             </div>
@@ -495,7 +502,6 @@
         `;
       });
 
-      // อัปเดตตัวเลข
       document.getElementById('db-daily-total').innerText = dTotal;
       document.getElementById('db-daily-normal').innerText = dNormal;
       document.getElementById('db-daily-issue').innerText = dIssue;
@@ -505,8 +511,6 @@
       document.getElementById('db-yearly-total').innerText = yTotal;
       document.getElementById('db-yearly-normal').innerText = yNormal;
       document.getElementById('db-yearly-issue').innerText = yIssue;
-      
-      // อัปเดต Accordion
       document.getElementById('dashboardAccordion').innerHTML = accHtml;
     }
 
@@ -518,11 +522,10 @@
       let ackHtml = '';
       let pendingCount = 0;
 
-      // จัดเรียงหน้าหัวหน้า: (1.รอลงนาม 2.มีประเด็น 3.ปกติ)
       let ackData = [...data].sort((a, b) => {
         let aPending = !a.sign_head ? 1 : 0;
         let bPending = !b.sign_head ? 1 : 0;
-        if (aPending !== bPending) return bPending - aPending; // รอลงนามขึ้นก่อน
+        if (aPending !== bPending) return bPending - aPending; 
         
         let aIssue = a.summary === 'มีประเด็นติดตามต่อ' ? 1 : 0;
         let bIssue = b.summary === 'มีประเด็นติดตามต่อ' ? 1 : 0;
@@ -552,7 +555,6 @@
         let fDate = r.date ? new Date(r.date).toLocaleDateString('th-TH') : '';
         let statusBadge = r.summary === 'ปกติ' ? `<span class="badge bg-success">ปกติ</span>` : `<span class="badge bg-danger">มีประเด็น</span>`;
         
-        // สถานะ รอตรวจสอบ จะเป็นจุดเด่น
         let ackStatus = r.sign_head ? `<span class="text-success fw-bold">✔️ ลงนามแล้ว</span>` : `<span class="text-warning fw-bold">รอตรวจสอบ</span>`;
         
         let actColor = r.action_status === 'กำลังแก้ไข' ? 'text-primary' : (r.action_status === 'แก้ไขเสร็จสิ้น' ? 'text-success' : '');
@@ -567,7 +569,6 @@
         </tr>`;
       });
 
-      // จัดการ DataTable เพื่อไม่ให้มันไปลบการจัดเรียง (Sorting) ของเราในหน้าหัวหน้า
       if($.fn.DataTable.isDataTable('#reportTable')) $('#reportTable').DataTable().destroy();
       document.getElementById('reportTbody').innerHTML = reportHtml;
       $('#reportTable').DataTable({ 
@@ -580,7 +581,7 @@
       $('#ackTable').DataTable({ 
         "pageLength": 10, 
         "scrollX": true, 
-        "order": [], // **สำคัญมาก:** ปิดการจัดเรียงอัตโนมัติของ DataTable เพื่อให้ "รอตรวจสอบ" อยู่บนสุดตามที่เขียน Logic ไว้
+        "order": [], 
         "language": { "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/th.json" }
       });
     }
@@ -591,16 +592,16 @@
       let fDate = row[0] ? new Date(row[0]).toLocaleDateString('th-TH') : '';
 
       let headAckHtml = '';
-      if (row[44]) { 
-        let ackDate = row[45] ? new Date(row[45]).toLocaleDateString('th-TH') : '-';
+      if (row[47]) { 
+        let ackDate = row[48] ? new Date(row[48]).toLocaleDateString('th-TH') : '-';
         headAckHtml = `
           <h6 class="fw-bold border-bottom pb-1 mt-4 text-success">ส่วนของหัวหน้ากลุ่มการพยาบาล/รองฯ</h6>
           <div class="p-3 border border-success rounded bg-light">
             <h6 class="text-success fw-bold mb-2">✔️ รับทราบแล้ว</h6>
-            <div class="mb-1"><strong>ผู้รับทราบ:</strong> ${row[44]}</div>
+            <div class="mb-1"><strong>ผู้รับทราบ:</strong> ${row[47]}</div>
             <div class="mb-1"><strong>วันที่รับทราบ:</strong> ${ackDate}</div>
-            ${row[46] ? `<div class="mb-1"><strong>สถานะการแก้ไข:</strong> <span class="fw-bold text-primary">${row[46]}</span></div>` : ''}
-            ${row[47] ? `<div class="text-success"><strong>รายละเอียดการแก้ไข:</strong> ${row[47]}</div>` : ''}
+            ${row[49] ? `<div class="mb-1"><strong>สถานะการแก้ไข:</strong> <span class="fw-bold text-primary">${row[49]}</span></div>` : ''}
+            ${row[50] ? `<div class="text-success"><strong>รายละเอียดการแก้ไข:</strong> ${row[50]}</div>` : ''}
           </div>
         `;
       }
@@ -610,7 +611,7 @@
           <div class="row">
             <div class="col-6 mb-2"><strong>📅 วันที่เวร:</strong> ${fDate}</div>
             <div class="col-6 mb-2"><strong>🕒 เวร:</strong> ${row[1]}</div>
-            <div class="col-12 text-primary"><strong>👤 ผู้รายงาน:</strong> ${row[41]} <small class="text-muted">(${row[42] || '-'})</small></div>
+            <div class="col-12 text-primary"><strong>👤 ผู้รายงาน:</strong> ${row[44]} <small class="text-muted">(${row[45] || '-'})</small></div>
           </div>
         </div>
 
@@ -620,32 +621,32 @@
             <thead class="table-light"><tr><th>แผนก</th><th>พยาบาล</th><th>จนท.</th><th>ลา</th><th>เพิ่มเติม</th></tr></thead>
             <tbody>
               <tr><td class="text-start">OPD</td><td>${row[2]||0}</td><td>${row[3]||0}</td><td>${row[4]||0}</td><td>แพทย์ลา: ${row[5]||'-'}</td></tr>
-              <tr><td class="text-start">ER</td><td>${row[6]||0}</td><td>${row[7]||0}</td><td>${row[8]||0}</td><td>-</td></tr>
-              <tr><td class="text-start">LR</td><td>${row[9]||0}</td><td>${row[10]||0}</td><td>${row[11]||0}</td><td>คลอด ${row[12]||0}, รอ ${row[13]||0}</td></tr>
-              <tr><td class="text-start">Ward</td><td>${row[14]||0}</td><td>${row[15]||0}</td><td>${row[16]||0}</td><td>ผู้ป่วย: ${row[17]||'-'}</td></tr>
-              <tr><td class="text-start">VIP</td><td>${row[18]||0}</td><td>${row[19]||0}</td><td>${row[20]||0}</td><td>ผู้ป่วย: ${row[21]||'-'}</td></tr>
-              <tr><td class="text-start">NurseCRM</td><td>${row[22]||0}</td><td>${row[23]||0}</td><td>${row[24]||0}</td><td>-</td></tr>
-              <tr><td class="text-start">ห้องบัตร</td><td>${row[25]||0}</td><td>${row[26]||0}</td><td>${row[27]||0}</td><td>-</td></tr>
-              <tr class="table-secondary fw-bold"><td class="text-end">รวม</td><td>${row[28]||0}</td><td>${row[29]||0}</td><td>${row[30]||0}</td><td></td></tr>
+              <tr><td class="text-start">ER</td><td>${row[6]||0}</td><td>${row[8]||0}</td><td>${row[9]||0}</td><td>เวชกิจ: ${row[7]||'-'}</td></tr>
+              <tr><td class="text-start">LR</td><td>${row[10]||0}</td><td>${row[11]||0}</td><td>${row[12]||0}</td><td>คลอด ${row[13]||0}, รอ ${row[14]||0}, หลัง ${row[15]||0}</td></tr>
+              <tr><td class="text-start">Ward</td><td>${row[16]||0}</td><td>${row[17]||0}</td><td>${row[18]||0}</td><td>ผู้ป่วย: ${row[19]||'-'}</td></tr>
+              <tr><td class="text-start">VIP</td><td>${row[20]||0}</td><td>${row[21]||0}</td><td>${row[22]||0}</td><td>ผู้ป่วย: ${row[23]||'-'}</td></tr>
+              <tr><td class="text-start">NurseCRM</td><td>${row[24]||0}</td><td>${row[25]||0}</td><td>${row[26]||0}</td><td>-</td></tr>
+              <tr><td class="text-start">ห้องบัตร</td><td>${row[27]||0}</td><td>${row[28]||0}</td><td>${row[29]||0}</td><td>-</td></tr>
+              <tr class="table-secondary fw-bold"><td class="text-end">รวม</td><td>${row[30]||0}</td><td>${row[31]||0}</td><td>${row[32]||0}</td><td class="text-primary">รวม IP: ${row[33]||0}</td></tr>
             </tbody>
           </table>
         </div>
-        ${row[31] ? `<p class="text-danger mt-2"><strong>ต้องการคนเพิ่ม:</strong> ${row[31]}</p>` : ''}
+        ${row[34] ? `<p class="text-danger mt-2"><strong>ต้องการคนเพิ่ม:</strong> ${row[34]}</p>` : ''}
 
         <h6 class="fw-bold border-bottom pb-1 mt-4">2. ผู้ป่วยสำคัญ</h6>
-        <p class="mb-3"><strong>สถานะ:</strong> ${row[32]} <br><span class="text-muted">${row[33] || '-'}</span></p>
+        <p class="mb-3"><strong>สถานะ:</strong> ${row[35]} <br><span class="text-muted">${row[36] || '-'}</span></p>
 
         <h6 class="fw-bold border-bottom pb-1 mt-4">3. เหตุการณ์สำคัญ</h6>
-        <p class="mb-3"><strong>สถานะ:</strong> ${row[34]} <br><span class="text-muted">${row[35] || '-'}</span></p>
+        <p class="mb-3"><strong>สถานะ:</strong> ${row[37]} <br><span class="text-muted">${row[38] || '-'}</span></p>
 
         <h6 class="fw-bold border-bottom pb-1">4. การประสานงาน</h6>
-        <p class="mb-3"><strong>บุคคลที่ประสาน:</strong> ${row[36] || '-'}<br><strong>เรื่องที่ประสาน:</strong> <br><span class="text-muted">${row[37] || '-'}</span></p>
+        <p class="mb-3"><strong>บุคคลที่ประสาน:</strong> ${row[39] || '-'}<br><strong>เรื่องที่ประสาน:</strong> <br><span class="text-muted">${row[40] || '-'}</span></p>
 
         <h6 class="fw-bold border-bottom pb-1">5. ปัญหาและข้อเสนอแนะ</h6>
-        <p class="mb-3 text-danger" style="white-space: pre-wrap;">${row[38] || '-'}</p>
+        <p class="mb-3 text-danger" style="white-space: pre-wrap;">${row[41] || '-'}</p>
 
         <h6 class="fw-bold border-bottom pb-1">สรุปเวร</h6>
-        <p><strong>สถานะ:</strong> ${row[39]}<br><strong>ประเด็นติดตาม:</strong> <br><span class="text-muted">${row[40] || '-'}</span></p>
+        <p><strong>สถานะ:</strong> ${row[42]}<br><strong>ประเด็นติดตาม:</strong> <br><span class="text-muted">${row[43] || '-'}</span></p>
 
         ${headAckHtml}
       `;
@@ -663,7 +664,7 @@
 
         if (r.sign_head) {
             $('#modal_sign_head').val(r.sign_head).trigger('change');
-            document.getElementById('modal_head_date').value = row[45] ? new Date(row[45]).toISOString().split('T')[0] : '';
+            document.getElementById('modal_head_date').value = row[48] ? new Date(row[48]).toISOString().split('T')[0] : '';
         } else {
             $('#modal_sign_head').val('').trigger('change');
             document.getElementById('modal_head_date').value = new Date().toISOString().split('T')[0];
