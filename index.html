@@ -35,7 +35,10 @@
     }
     input, textarea, select {
       -webkit-user-select: auto; -moz-user-select: auto; -ms-user-select: auto; user-select: auto;
-    } 
+    }
+    /* ปรับแต่ง DataTables ในหน้าแดชบอร์ดให้ดูเหมือน List */
+    #dashboardTable_wrapper .dataTables_length, 
+    #dashboardTable_wrapper .dataTables_filter { margin-bottom: 15px; }
   </style>
 </head>
 <body>
@@ -92,7 +95,21 @@
             <tbody>
               <tr><td class="fw-bold">OPD</td><td><input type="number" class="form-control rn-input" id="opd_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="opd_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="opd_leave" oninput="calcSum()"></td><td><div class="input-group input-group-sm extra-input-group"><span class="input-group-text">แพทย์ลา</span><input type="number" class="form-control" id="doctor_leave"></div></td></tr>
               
-              <tr><td class="fw-bold">ER</td><td><input type="number" class="form-control rn-input" id="er_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="er_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="er_leave" oninput="calcSum()"></td><td><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-secondary text-white">เวชกิจ</span><input type="number" class="form-control" id="er_paramedic"></div></td></tr>
+              <tr>
+                <td class="fw-bold">ER</td>
+                <td><input type="number" class="form-control rn-input" id="er_rn" oninput="calcSum()"></td>
+                <td>
+                  <div class="input-group input-group-sm mb-1">
+                    <span class="input-group-text" style="width: 55px;">จนท.</span>
+                    <input type="number" class="form-control pn-input" id="er_pn" oninput="calcSum()">
+                  </div>
+                  <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-secondary text-white" style="width: 55px;">เวชกิจ</span>
+                    <input type="number" class="form-control pn-input" id="er_paramedic" oninput="calcSum()"> </div>
+                </td>
+                <td><input type="number" class="form-control leave-input" id="er_leave" oninput="calcSum()"></td>
+                <td></td>
+              </tr>
               
               <tr><td class="fw-bold">LR</td><td><input type="number" class="form-control rn-input" id="lr_rn" oninput="calcSum()"></td><td><input type="number" class="form-control pn-input" id="lr_pn" oninput="calcSum()"></td><td><input type="number" class="form-control leave-input" id="lr_leave" oninput="calcSum()"></td><td><div class="d-flex flex-column gap-2"><div class="d-flex flex-row gap-2"><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-success text-white">คลอด</span><input type="number" class="form-control" id="lr_delivered"></div><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-warning">รอคลอด</span><input type="number" class="form-control" id="lr_waiting"></div></div><div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-danger text-white">หลังคลอด</span><input type="number" class="form-control" id="lr_postpartum"></div></div></td></tr>
               
@@ -203,9 +220,14 @@
         <i class="fw-bold">📌 สรุปยอดรอหัวหน้าลงนามรับทราบ:</i> <span id="db-pending-total" class="fw-bold fs-5 text-danger">0</span> รายการ
       </div>
 
-      <h5 class="fw-bold mt-5 mb-3 text-secondary border-bottom pb-2">📋 รายละเอียดข้อ 2-5 และประเด็นติดตาม (คลิกเพื่อกางดูรายละเอียด)</h5>
-      <div class="accordion shadow-sm" id="dashboardAccordion">
-        </div>
+      <h5 class="fw-bold mt-5 mb-3 text-secondary border-bottom pb-2">📋 รายละเอียดข้อ 2-5 และประเด็นติดตาม</h5>
+      
+      <div class="table-responsive">
+        <table id="dashboardTable" class="table table-borderless w-100 p-0 m-0">
+          <thead class="d-none"><tr><th>รายการ</th></tr></thead>
+          <tbody id="dashboardTbody"></tbody>
+        </table>
+      </div>
 
     </div>
 
@@ -214,7 +236,7 @@
       <div class="table-responsive">
         <table id="reportTable" class="table table-striped table-bordered w-100 text-nowrap">
           <thead class="table-dark">
-            <tr><th>ข้อมูล</th><th>วันที่</th><th>เวร</th><th>ผู้ลงนาม</th><th>สถานะเวร</th><th>หัวหน้ารับทราบ</th></tr>
+            <tr><th>ข้อมูล</th><th>วันที่</th><th>เวร</th><th>ผู้รายงาน</th><th>สถานะเวร</th><th>หัวหน้ารับทราบ</th></tr>
           </thead>
           <tbody id="reportTbody"></tbody>
         </table>
@@ -226,7 +248,7 @@
       <div class="table-responsive">
         <table class="table table-striped table-bordered w-100 text-nowrap" id="ackTable">
           <thead class="table-dark">
-            <tr><th>วันที่</th><th>เวร</th><th>ผู้รายงาน</th><th>สถานะเวร</th><th>สถานะลงนาม</th><th>สถานะการแก้ไข</th><th>รายละเอียดการแก้ไข</th><th>แอคชั่น</th></tr>
+            <tr><th>วันที่</th><th>เวร</th><th>พยาบาลเวร</th><th>สถานะเวร</th><th>สถานะการแก้ไข</th><th>แอคชั่น</th></tr>
           </thead>
           <tbody id="ackTbody"></tbody>
         </table>
@@ -475,30 +497,34 @@
 
         let row = r.fullData;
         let shift = row[1] || '';
-        let reporter = row[44] || ''; // เปลี่ยนตาม Index ใหม่
+        let reporter = row[44] || ''; 
         
         let isProblematic = (row[35] === 'มี' || row[37] === 'มี' || row[41] !== '' || row[42] === 'มีประเด็นติดตามต่อ');
         let badgeIcon = isProblematic ? '<span class="badge bg-warning text-dark ms-2">มีประเด็น/เหตุการณ์</span>' : '<span class="badge bg-light text-secondary ms-2 border">ปกติ</span>';
 
         accHtml += `
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingDb${idx}">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDb${idx}">
-                <strong>📅 ${fDate} | เวร: ${shift} | 👤 ผู้รายงาน: ${reporter}</strong> ${badgeIcon}
-              </button>
-            </h2>
-            <div id="collapseDb${idx}" class="accordion-collapse collapse" data-bs-parent="#dashboardAccordion">
-              <div class="accordion-body bg-light">
-                 <ul class="list-group list-group-flush border rounded">
-                   <li class="list-group-item"><strong>2. ผู้ป่วยสำคัญ:</strong> ${row[35]} ${row[35] === 'มี' ? `<br><span class="text-danger">${row[36] || '-'}</span>` : ''}</li>
-                   <li class="list-group-item"><strong>3. เหตุการณ์สำคัญ:</strong> ${row[37]} ${row[37] === 'มี' ? `<br><span class="text-danger">${row[38] || '-'}</span>` : ''}</li>
-                   <li class="list-group-item"><strong>4. การประสานงาน:</strong> ${row[39] || '-'}<br><span class="text-muted">${row[40] || '-'}</span></li>
-                   <li class="list-group-item"><strong>5. ปัญหา/ข้อเสนอแนะ:</strong><br><span class="${row[41] ? 'text-danger' : 'text-muted'}">${row[41] || '-'}</span></li>
-                   <li class="list-group-item"><strong>📌 ประเด็นติดตาม (สรุปเวร):</strong> ${row[42]} ${row[42] === 'มีประเด็นติดตามต่อ' ? `<br><span class="text-danger">${row[43] || '-'}</span>` : ''}</li>
-                 </ul>
+          <tr><td class="p-0 pb-2">
+            <div class="accordion" id="accItem${idx}">
+              <div class="accordion-item shadow-sm border rounded">
+                <h2 class="accordion-header" id="headingDb${idx}">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDb${idx}">
+                    <strong>📅 ${fDate} | เวร: ${shift} | 👤 ผู้รายงาน: ${reporter}</strong> ${badgeIcon}
+                  </button>
+                </h2>
+                <div id="collapseDb${idx}" class="accordion-collapse collapse" data-bs-parent="#accItem${idx}">
+                  <div class="accordion-body bg-light">
+                     <ul class="list-group list-group-flush border rounded">
+                       <li class="list-group-item"><strong>2. ผู้ป่วยสำคัญ:</strong> ${row[35]} ${row[35] === 'มี' ? `<br><span class="text-danger">${row[36] || '-'}</span>` : ''}</li>
+                       <li class="list-group-item"><strong>3. เหตุการณ์สำคัญ:</strong> ${row[37]} ${row[37] === 'มี' ? `<br><span class="text-danger">${row[38] || '-'}</span>` : ''}</li>
+                       <li class="list-group-item"><strong>4. การประสานงาน:</strong> ${row[39] || '-'}<br><span class="text-muted">${row[40] || '-'}</span></li>
+                       <li class="list-group-item"><strong>5. ปัญหา/ข้อเสนอแนะ:</strong><br><span class="${row[41] ? 'text-danger' : 'text-muted'}">${row[41] || '-'}</span></li>
+                       <li class="list-group-item"><strong>📌 ประเด็นติดตาม (สรุปเวร):</strong> ${row[42]} ${row[42] === 'มีประเด็นติดตามต่อ' ? `<br><span class="text-danger">${row[43] || '-'}</span>` : ''}</li>
+                     </ul>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </td></tr>
         `;
       });
 
@@ -511,7 +537,17 @@
       document.getElementById('db-yearly-total').innerText = yTotal;
       document.getElementById('db-yearly-normal').innerText = yNormal;
       document.getElementById('db-yearly-issue').innerText = yIssue;
-      document.getElementById('dashboardAccordion').innerHTML = accHtml;
+      
+      if($.fn.DataTable.isDataTable('#dashboardTable')) $('#dashboardTable').DataTable().destroy();
+      document.getElementById('dashboardTbody').innerHTML = accHtml;
+      
+      // ให้เลือกแสดงได้ทีละ 10, 25, 50, 100 แถว สำหรับแดชบอร์ด
+      $('#dashboardTable').DataTable({
+        "pageLength": 10,
+        "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
+        "ordering": false,
+        "language": { "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/th.json" }
+      });
     }
 
     function renderTables(data) {
@@ -539,6 +575,7 @@
         let headSign = r.sign_head ? `<span class="text-success fw-bold">✔️ ${r.sign_head}</span>` : `<span class="text-warning">รอดำเนินการ</span>`;
         let fDate = r.date ? new Date(r.date).toLocaleDateString('th-TH') : '';
 
+        // ตารางหน้ารายงานทั้งหมด ปรับให้เหลือ 6 คอลัมน์ที่สะอาดตาเหมือนเดิม
         reportHtml += `<tr>
           <td><button class="btn btn-sm btn-info text-white fw-bold shadow-sm" onclick="viewDetail(${index}, false)">🔍 ดูข้อมูล</button></td>
           <td>${fDate}</td><td>${r.shift}</td><td>${r.sign_rn}</td>
@@ -555,24 +592,23 @@
         let fDate = r.date ? new Date(r.date).toLocaleDateString('th-TH') : '';
         let statusBadge = r.summary === 'ปกติ' ? `<span class="badge bg-success">ปกติ</span>` : `<span class="badge bg-danger">มีประเด็น</span>`;
         
-        let ackStatus = r.sign_head ? `<span class="text-success fw-bold">✔️ ลงนามแล้ว</span>` : `<span class="text-warning fw-bold">รอตรวจสอบ</span>`;
-        
-        let actColor = r.action_status === 'กำลังแก้ไข' ? 'text-primary' : (r.action_status === 'แก้ไขเสร็จสิ้น' ? 'text-success' : '');
-        let shortAction = r.action_status ? `<span class="${actColor} fw-bold">${r.action_status}</span>` : '-';
-        let shortRes = r.resolution_detail ? (r.resolution_detail.length > 20 ? r.resolution_detail.substring(0,20)+'...' : r.resolution_detail) : '-';
+        let actColor = r.action_status === 'กำลังแก้ไข' ? 'text-primary' : (r.action_status === 'แก้ไขเสร็จสิ้น' ? 'text-success' : 'text-muted');
+        let shortAction = r.action_status ? `<span class="${actColor} fw-bold">${r.action_status}</span>` : '<span class="text-warning">รอดำเนินการ</span>';
 
+        // ตารางหน้าหัวหน้ารับทราบ ปรับให้เหลือ 6 คอลัมน์ ไม่เกะกะ
         ackHtml += `<tr>
           <td>${fDate}</td><td>${r.shift}</td><td>${r.sign_rn}</td>
-          <td>${statusBadge}</td><td>${ackStatus}</td>
-          <td>${shortAction}</td><td>${shortRes}</td>
-          <td><button class="btn btn-sm btn-warning fw-bold shadow-sm" onclick="viewDetail(${originalIndex}, true)">จัดการ/พิมพ์</button></td>
+          <td>${statusBadge}</td><td>${shortAction}</td>
+          <td><button class="btn btn-sm btn-warning fw-bold shadow-sm" onclick="viewDetail(${originalIndex}, true)">ตรวจสอบ & ลงนาม</button></td>
         </tr>`;
       });
 
       if($.fn.DataTable.isDataTable('#reportTable')) $('#reportTable').DataTable().destroy();
       document.getElementById('reportTbody').innerHTML = reportHtml;
       $('#reportTable').DataTable({ 
-        "pageLength": 10, "scrollX": true, 
+        "pageLength": 10, 
+        "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
+        "scrollX": true, 
         "language": { "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/th.json" }
       });
 
@@ -580,6 +616,7 @@
       document.getElementById('ackTbody').innerHTML = ackHtml;
       $('#ackTable').DataTable({ 
         "pageLength": 10, 
+        "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
         "scrollX": true, 
         "order": [], 
         "language": { "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/th.json" }
