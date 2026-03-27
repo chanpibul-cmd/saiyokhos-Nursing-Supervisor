@@ -36,7 +36,6 @@
     input, textarea, select {
       -webkit-user-select: auto; -moz-user-select: auto; -ms-user-select: auto; user-select: auto;
     }
-    /* ปรับแต่ง DataTables ในหน้าแดชบอร์ดให้ดูเหมือน List */
     #dashboardTable_wrapper .dataTables_length, 
     #dashboardTable_wrapper .dataTables_filter { margin-bottom: 15px; }
   </style>
@@ -98,15 +97,15 @@
               <tr>
                 <td class="fw-bold">ER</td>
                 <td><input type="number" class="form-control rn-input" id="er_rn" oninput="calcSum()"></td>
-                <td> 
-                  <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-secondary text-white" style="width: 55px;">เวชกิจ</span>
-                    <input type="number" class="form-control pn-input" id="er_paramedic" oninput="calcSum()"> </div>
+                <td>
                   <div class="input-group input-group-sm mb-1">
                     <span class="input-group-text" style="width: 55px;">จนท.</span>
                     <input type="number" class="form-control pn-input" id="er_pn" oninput="calcSum()">
                   </div>
-                 
+                  <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-secondary text-white" style="width: 55px;">เวชกิจ</span>
+                    <input type="number" class="form-control pn-input" id="er_paramedic" oninput="calcSum()"> 
+                  </div>
                 </td>
                 <td><input type="number" class="form-control leave-input" id="er_leave" oninput="calcSum()"></td>
                 <td></td>
@@ -172,7 +171,7 @@
             </select>
           </div>
           <div class="col-12 col-md-4">
-            <label class="fw-bold">กลุ่มงาน</label>
+            <label class="fw-bold">กลุ่มงาน (ออโต้)</label>
             <input type="text" class="form-control bg-white" id="dept" readonly placeholder="-">
           </div>
           <div class="col-12 col-md-3">
@@ -249,7 +248,7 @@
       <div class="table-responsive">
         <table class="table table-striped table-bordered w-100 text-nowrap" id="ackTable">
           <thead class="table-dark">
-            <tr><th>วันที่</th><th>เวร</th><th>พยาบาลเวร</th><th>สถานะเวร</th><th>สถานะการแก้ไข</th><th>แอคชั่น</th></tr>
+            <tr><th>วันที่</th><th>เวร</th><th>ผู้รายงาน</th><th>สถานะเวร</th><th>สถานะรับทราบ</th><th>สถานะการแก้ไข</th><th>รายละเอียด</th><th>แอคชั่น</th></tr>
           </thead>
           <tbody id="ackTbody"></tbody>
         </table>
@@ -324,8 +323,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script>
-    // ⚠️ นำ Web App URL ที่ได้จาก Google Apps Script มาวางที่นี่
-    const API_URL = "https://script.google.com/macros/s/AKfycbxODTzal-M8OYa1A1bJTPRb9FbAWjRzQDs17oZfAGqTgPsIPgyQHLLJBs-OSD3jy_vyow/exec"; 
+    const API_URL = "https://script.google.com/macros/s/AKfycbzYds3HC2n7VJfMNfGsO_bFDZ50GRx3BOb6T0ad5uENcvEDTqmQULIvSO4LL0CD1WSd9w/exec"; 
 
     let isHeadAuthenticated = false;
 
@@ -420,7 +418,6 @@
       document.getElementById('sum_pn').value = sumPn;
       document.getElementById('sum_leave').value = sumLeave;
       
-      // คำนวณยอดผู้ป่วย IP
       let wardPt = Number(document.getElementById('ward_pt').value) || 0;
       let vipPt = Number(document.getElementById('vip_pt').value) || 0;
       document.getElementById('sum_ip_pt').value = wardPt + vipPt;
@@ -490,7 +487,9 @@
         let isToday = (rDate.getDate() === now.getDate() && rDate.getMonth() === now.getMonth() && rDate.getFullYear() === now.getFullYear());
         let isThisMonth = (rDate.getMonth() === now.getMonth() && rDate.getFullYear() === now.getFullYear());
         let isThisYear = (rDate.getFullYear() === now.getFullYear());
-        let hasIssue = r.summary === 'มีประเด็นติดตามต่อ';
+        
+        let summaryText = r.summary ? r.summary.toString().trim() : '';
+        let hasIssue = summaryText !== 'ปกติ';
 
         if(isThisYear) { yTotal++; hasIssue ? yIssue++ : yNormal++; }
         if(isThisMonth) { mTotal++; hasIssue ? mIssue++ : mNormal++; }
@@ -500,7 +499,7 @@
         let shift = row[1] || '';
         let reporter = row[44] || ''; 
         
-        let isProblematic = (row[35] === 'มี' || row[37] === 'มี' || row[41] !== '' || row[42] === 'มีประเด็นติดตามต่อ');
+        let isProblematic = (row[35] === 'มี' || row[37] === 'มี' || row[41] !== '' || summaryText === 'มีประเด็นติดตามต่อ');
         let badgeIcon = isProblematic ? '<span class="badge bg-warning text-dark ms-2">มีประเด็น/เหตุการณ์</span>' : '<span class="badge bg-light text-secondary ms-2 border">ปกติ</span>';
 
         accHtml += `
@@ -519,7 +518,7 @@
                        <li class="list-group-item"><strong>3. เหตุการณ์สำคัญ:</strong> ${row[37]} ${row[37] === 'มี' ? `<br><span class="text-danger">${row[38] || '-'}</span>` : ''}</li>
                        <li class="list-group-item"><strong>4. การประสานงาน:</strong> ${row[39] || '-'}<br><span class="text-muted">${row[40] || '-'}</span></li>
                        <li class="list-group-item"><strong>5. ปัญหา/ข้อเสนอแนะ:</strong><br><span class="${row[41] ? 'text-danger' : 'text-muted'}">${row[41] || '-'}</span></li>
-                       <li class="list-group-item"><strong>📌 ประเด็นติดตาม (สรุปเวร):</strong> ${row[42]} ${row[42] === 'มีประเด็นติดตามต่อ' ? `<br><span class="text-danger">${row[43] || '-'}</span>` : ''}</li>
+                       <li class="list-group-item"><strong>📌 ประเด็นติดตาม (สรุปเวร):</strong> ${summaryText} ${summaryText === 'มีประเด็นติดตามต่อ' ? `<br><span class="text-danger">${row[43] || '-'}</span>` : ''}</li>
                      </ul>
                   </div>
                 </div>
@@ -542,7 +541,6 @@
       if($.fn.DataTable.isDataTable('#dashboardTable')) $('#dashboardTable').DataTable().destroy();
       document.getElementById('dashboardTbody').innerHTML = accHtml;
       
-      // ให้เลือกแสดงได้ทีละ 10, 25, 50, 100 แถว สำหรับแดชบอร์ด
       $('#dashboardTable').DataTable({
         "pageLength": 10,
         "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
@@ -564,19 +562,23 @@
         let bPending = !b.sign_head ? 1 : 0;
         if (aPending !== bPending) return bPending - aPending; 
         
-        let aIssue = a.summary === 'มีประเด็นติดตามต่อ' ? 1 : 0;
-        let bIssue = b.summary === 'มีประเด็นติดตามต่อ' ? 1 : 0;
+        let aSummary = a.summary ? a.summary.toString().trim() : '';
+        let bSummary = b.summary ? b.summary.toString().trim() : '';
+        let aIssue = aSummary === 'มีประเด็นติดตามต่อ' ? 1 : 0;
+        let bIssue = bSummary === 'มีประเด็นติดตามต่อ' ? 1 : 0;
         if (aIssue !== bIssue) return bIssue - aIssue;
         
         return 0; 
       });
 
       data.forEach((r, index) => {
-        let statusBadge = r.summary === 'ปกติ' ? `<span class="badge bg-success">ปกติ</span>` : `<span class="badge bg-danger">มีประเด็น</span>`;
+        // ใช้ trim() เพื่อกันปัญหาพิมพ์ช่องว่างเกินมา
+        let summaryText = r.summary ? r.summary.toString().trim() : '';
+        let statusBadge = summaryText === 'ปกติ' ? `<span class="badge bg-success">ปกติ</span>` : `<span class="badge bg-danger">มีประเด็น</span>`;
         let headSign = r.sign_head ? `<span class="text-success fw-bold">✔️ ${r.sign_head}</span>` : `<span class="text-warning">รอดำเนินการ</span>`;
         let fDate = r.date ? new Date(r.date).toLocaleDateString('th-TH') : '';
 
-        // ตารางหน้ารายงานทั้งหมด ปรับให้เหลือ 6 คอลัมน์ที่สะอาดตาเหมือนเดิม
+        // มี 6 คอลัมน์
         reportHtml += `<tr>
           <td><button class="btn btn-sm btn-info text-white fw-bold shadow-sm" onclick="viewDetail(${index}, false)">🔍 ดูข้อมูล</button></td>
           <td>${fDate}</td><td>${r.shift}</td><td>${r.sign_rn}</td>
@@ -591,30 +593,46 @@
       ackData.forEach((r) => {
         let originalIndex = globalReports.indexOf(r);
         let fDate = r.date ? new Date(r.date).toLocaleDateString('th-TH') : '';
-        let statusBadge = r.summary === 'ปกติ' ? `<span class="badge bg-success">ปกติ</span>` : `<span class="badge bg-danger">มีประเด็น</span>`;
+        
+        let summaryText = r.summary ? r.summary.toString().trim() : '';
+        let statusBadge = summaryText === 'ปกติ' ? `<span class="badge bg-success">ปกติ</span>` : `<span class="badge bg-danger">มีประเด็น</span>`;
+        
+        let ackStatus = r.sign_head ? `<span class="text-success fw-bold">✔️ รับทราบแล้ว</span>` : `<span class="text-warning fw-bold">รอตรวจสอบ</span>`;
         
         let actColor = r.action_status === 'กำลังแก้ไข' ? 'text-primary' : (r.action_status === 'แก้ไขเสร็จสิ้น' ? 'text-success' : 'text-muted');
-        let shortAction = r.action_status ? `<span class="${actColor} fw-bold">${r.action_status}</span>` : '<span class="text-warning">รอดำเนินการ</span>';
+        let shortAction = r.action_status ? `<span class="${actColor} fw-bold">${r.action_status}</span>` : '<span class="text-muted">-</span>';
+        
+        let shortRes = r.resolution_detail ? (r.resolution_detail.length > 20 ? r.resolution_detail.substring(0,20)+'...' : r.resolution_detail) : '-';
 
-        // ตารางหน้าหัวหน้ารับทราบ ปรับให้เหลือ 6 คอลัมน์ ไม่เกะกะ
+        // มี 8 คอลัมน์ เหมือนโครงสร้าง <th> ใน HTML
         ackHtml += `<tr>
-          <td>${fDate}</td><td>${r.shift}</td><td>${r.sign_rn}</td>
-          <td>${statusBadge}</td><td>${shortAction}</td>
-          <td><button class="btn btn-sm btn-warning fw-bold shadow-sm" onclick="viewDetail(${originalIndex}, true)">ตรวจสอบ & ลงนาม</button></td>
+          <td>${fDate}</td>
+          <td>${r.shift}</td>
+          <td>${r.sign_rn}</td>
+          <td>${statusBadge}</td>
+          <td>${ackStatus}</td>
+          <td>${shortAction}</td>
+          <td>${shortRes}</td>
+          <td><button class="btn btn-sm btn-warning fw-bold shadow-sm" onclick="viewDetail(${originalIndex}, true)">จัดการ/พิมพ์</button></td>
         </tr>`;
       });
 
       if($.fn.DataTable.isDataTable('#reportTable')) $('#reportTable').DataTable().destroy();
       document.getElementById('reportTbody').innerHTML = reportHtml;
+      
+      // เพิ่ม "order": [] เพื่อป้องกันการเรียงลำดับเพี้ยน
       $('#reportTable').DataTable({ 
         "pageLength": 10, 
         "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
         "scrollX": true, 
+        "order": [], 
         "language": { "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/th.json" }
       });
 
       if($.fn.DataTable.isDataTable('#ackTable')) $('#ackTable').DataTable().destroy();
       document.getElementById('ackTbody').innerHTML = ackHtml;
+      
+      // เพิ่ม "order": [] เพื่อป้องกันการเรียงลำดับเพี้ยน
       $('#ackTable').DataTable({ 
         "pageLength": 10, 
         "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
@@ -803,7 +821,6 @@
       }, 500);
     }
 
-    // ================= Anti-Copy =================
     document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
     document.addEventListener('copy', function(e) {
       e.preventDefault();
