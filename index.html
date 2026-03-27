@@ -98,14 +98,15 @@
               <tr>
                 <td class="fw-bold">ER</td>
                 <td><input type="number" class="form-control rn-input" id="er_rn" oninput="calcSum()"></td>
-                <td>
+                <td> 
+                  <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-secondary text-white" style="width: 55px;">เวชกิจ</span>
+                    <input type="number" class="form-control pn-input" id="er_paramedic" oninput="calcSum()"> </div>
                   <div class="input-group input-group-sm mb-1">
                     <span class="input-group-text" style="width: 55px;">จนท.</span>
                     <input type="number" class="form-control pn-input" id="er_pn" oninput="calcSum()">
                   </div>
-                  <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-secondary text-white" style="width: 55px;">เวชกิจ</span>
-                    <input type="number" class="form-control pn-input" id="er_paramedic" oninput="calcSum()"> </div>
+                 
                 </td>
                 <td><input type="number" class="form-control leave-input" id="er_leave" oninput="calcSum()"></td>
                 <td></td>
