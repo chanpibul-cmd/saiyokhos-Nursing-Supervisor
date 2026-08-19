@@ -71,7 +71,7 @@
             <label class="fw-bold">เวร</label>
             <select class="form-select" id="shift" required>
               <option value="">-- เลือกเวร --</option>
-              <option value="00:01-08:00">00:01-08:00</option><option value="08:01-16:00">08:01-16:00</option><option value="16:01-00:00">16:01-00:00</option>
+              <option value="เช้า">เช้า</option><option value="บ่าย">บ่าย</option><option value="ดึก">ดึก</option>
             </select>
           </div>
         </div>
@@ -132,9 +132,8 @@
                   <div class="d-flex flex-wrap gap-1">
                     <div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-light">Admit</span><input type="number" class="form-control" id="ward_admit"></div>
                     <div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-light">D/C</span><input type="number" class="form-control" id="ward_dis"></div>
-                     <div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-danger text-white">Refer</span><input type="number" class="form-control refer-input" id="ward_refer" oninput="calcSum()"></div>
                     <div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-info text-dark">ยอด PT</span><input type="number" class="form-control" id="ward_pt" oninput="calcSum()"></div>
-                   
+                    <div class="input-group input-group-sm extra-input-group"><span class="input-group-text bg-danger text-white">Refer</span><input type="number" class="form-control refer-input" id="ward_refer" oninput="calcSum()"></div>
                   </div>
                 </td>
               </tr>
@@ -251,7 +250,12 @@
           </div>
         </div>
 
-
+        <div class="mt-4 form-check d-flex justify-content-center align-items-center">
+          <input class="form-check-input border-danger me-2" type="checkbox" id="send_director" style="transform: scale(1.5);">
+          <label class="form-check-label text-danger fw-bold fs-5" for="send_director">
+            ส่งข้อมูลสรุปนี้ให้ ผอ. รับทราบทาง Telegram
+          </label>
+        </div>
 
         <div class="mt-4 text-center">
           <button type="submit" class="btn btn-primary btn-lg w-100 w-md-50" id="btnSubmit">บันทึกข้อมูลรายงานเวร</button>
@@ -351,7 +355,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbxFG3b36xx5WRarUnJzoJFtfGbe_xCKI6aIgyWEhpt-wMpardGsPIJ56TVJ3O4lRl81dA/exec"; 
+    const API_URL = "https://script.google.com/macros/s/AKfycbxODTzal-M8OYa1A1bJTPRb9FbAWjRzQDs17oZfAGqTgPsIPgyQHLLJBs-OSD3jy_vyow/exec"; 
 
     let isHeadAuthenticated = false;
 
